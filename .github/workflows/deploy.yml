@@ -1,0 +1,72 @@
+# Test, then deploy to GitHub Pages, on every push to main.
+#
+# The order is the point: typecheck, unit tests and end-to-end tests all run before anything is
+# published, so a red build cannot reach the live site. Deploying a skeleton before there is
+# anything worth deploying is deliberate — it flushes out the deployment-only failures while there
+# are three files rather than three hundred, and none of those failures are visible to a local test.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; the newer commit is always the one that should win.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # node-version-file rather than a literal: CI reads the same .nvmrc the developer's shell
+      # does, so the two cannot drift apart silently.
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm test
+
+      # chromium only, and without --with-deps: that flag shells out to sudo apt-get, which needs a
+      # password prompt no non-interactive shell can answer. The runner already has the libraries.
+      - run: npx playwright install chromium
+      - run: npm run test:e2e
+
+      # No actions/configure-pages step here, deliberately. Its `enablement: true` option looks
+      # like it would remove the manual Pages setting, and it does not: on a real run it fails with
+      # "Resource not accessible by integration", because creating a Pages site is beyond what the
+      # default workflow token may do. Enabling Pages stays a one-time repository setting.
+      #
+      # GitHub project pages are served from /<repo>/, so the built asset paths have to match or
+      # every script and stylesheet 404s on a site that otherwise looks perfectly fine.
+      - run: npm run build
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

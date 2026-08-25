@@ -1,0 +1,10 @@
+{
+  "name": "spec-coverage-fixtures",
+  "private": true,
+  "//": "Fixture project. Its specCoverage block is what exercises the configuration path — without it the tool would fall back to defaults and find nothing here.",
+  "specCoverage": {
+    "specs": ["specs"],
+    "src": ["impl"],
+    "tests": ["checks"]
+  }
+}
