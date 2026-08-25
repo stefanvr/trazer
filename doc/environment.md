@@ -159,16 +159,27 @@ documentation claims it says.
 - **`gh` is not installed on this machine.** `command -v gh` → nothing. Repository creation is
   therefore a browser step, not a scripted one, and any instruction assuming `gh` has to be
   translated.
-- **Repository created** at `github.com/stefanvr/trazer`, empty — no README, no `.gitignore`, no
-  licence. An initialised repository gives the first push a divergent history to reconcile, for
-  files this project already has.
+- **Repository `stefanvr/trazer` exists and was empty** — no README, no `.gitignore`, no licence.
+  Confirmed before pushing with `git ls-remote git@github.com:stefanvr/trazer.git`, which exited 0
+  and listed no refs. Both halves of that matter: a *missing* repository exits 128 with
+  `ERROR: Repository not found`, and an *initialised* one lists a ref and would give the first push
+  a divergent history to reconcile, over files this project already has.
+
+  **Check the exit code without a pipe.** `git ls-remote … | head` then `echo $?` reports `head`'s
+  status, not git's, so a missing repository reads as success. Redirect to a file and test the code
+  directly.
 - **Remote added over SSH**, never HTTPS: `git@github.com:stefanvr/trazer.git`. See silent failure 3.
-  Confirmed with `git ls-remote`, which lists refs rather than hanging.
-- **GitHub Pages enabled** at *Settings → Pages → Source: **GitHub Actions***. A repository setting,
-  not a file, and the one step the pipeline genuinely cannot do for itself — `actions/configure-pages`
-  advertises `enablement: true` for exactly this and fails with *Resource not accessible by
-  integration*, because creating a Pages site is beyond the default workflow token. Confirmed by the
-  `deploy` job reaching `actions/deploy-pages` and returning a live URL.
+  Confirmed by pushing and comparing `git rev-parse --short HEAD` with
+  `git rev-parse --short origin/main` — both `27cc9cf`.
+- **GitHub Pages — enabled by the owner** at *Settings → Pages → Source: **GitHub Actions***. A
+  repository setting rather than a file, and the one step the pipeline genuinely cannot do for
+  itself: `actions/configure-pages` advertises `enablement: true` for exactly this and fails with
+  *Resource not accessible by integration*, because creating a Pages site is beyond what the default
+  workflow token may do. Observed on a real repository, not assumed.
+
+  Confirmed by the `deploy` job reaching `actions/deploy-pages` and returning a live URL, and by the
+  SHA on that page matching `main`. Until then the `build` job passes and `deploy` fails — which is
+  the correct and legible failure, since nothing broken reaches the site.
 
 ---
 
