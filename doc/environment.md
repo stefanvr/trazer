@@ -177,9 +177,18 @@ documentation claims it says.
   *Resource not accessible by integration*, because creating a Pages site is beyond what the default
   workflow token may do. Observed on a real repository, not assumed.
 
-  Confirmed by the `deploy` job reaching `actions/deploy-pages` and returning a live URL, and by the
-  SHA on that page matching `main`. Until then the `build` job passes and `deploy` fails — which is
-  the correct and legible failure, since nothing broken reaches the site.
+  **The before and after, observed.** Run 1 (`27cc9cf`) had `build` green through every step and
+  `deploy` failing at `actions/deploy-pages@v4` — the correct and legible failure, since nothing
+  broken reaches the site. Runs 2 and 3 succeeded once the setting was on.
+
+  Confirmed at the live site rather than from the job's green tick: `https://stefanvr.github.io/trazer/`
+  returns 200, its asset paths are `/trazer/assets/…` — the thing that silently 404s when `VITE_BASE`
+  is wrong — and the bundle contains `` `cc704bd` ``, matching `git rev-parse --short origin/main`.
+  That match is the entire reason the identifier exists.
+
+  **The Pages API is not a check.** `GET /repos/{owner}/{repo}/pages` returns
+  `404` unauthenticated even for a public repository with Pages live, so it reports *not enabled* and
+  *no permission to ask* identically. Fetch the site and read the SHA instead.
 
 ---
 
