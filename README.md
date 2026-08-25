@@ -22,7 +22,7 @@ npm run dev
 | Command | What it does |
 |---|---|
 | `npm run dev` | Vite dev server with hot module replacement |
-| `npm test` | Vitest, once. Logic, no browser — this is where the bulk of coverage lives |
+| `npm test` | Unit tests, then the tooling's own tests. No browser — this is where the bulk of coverage lives |
 | `npm run test:e2e` | Playwright against the **built** output, at desktop and phone viewports |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run build` | Production bundle into `dist/` |

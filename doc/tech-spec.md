@@ -44,7 +44,10 @@ recorded here is what this project decided differently.
 The commands, named the same in every project so muscle memory transfers.
 
 - **Dev:** `npm run dev` — Vite dev server with hot module replacement.
-- **Tests:** `npm test` — Vitest, run once. Covers logic through its own interface, with no browser.
+- **Tests:** `npm test` — runs **two** runners, because there are two kinds of code here:
+  `test:unit` (Vitest, over `test/**/*.test.ts`) covers application logic, and `test:tools`
+  (`node --test`, over `tools/**/*.test.mjs`) covers the shipped tooling. `npm test` is the single
+  name that runs both, so CI needs no separate step and neither does anyone else.
 - **E2E:** `npm run test:e2e` — Playwright against the **built** output at two viewports, deliberately
   thin. The dev server serves unbundled modules under a different `base`, so a test passing there
   can still fail on the deployed site.
@@ -105,6 +108,28 @@ Taken deliberately and **verified rather than assumed** — `npm run typecheck` 
 recipe's source, which exercises `verbatimModuleSyntax`, `isolatedModules` and ambient
 `declare const`. If it bites, TypeScript 6.0.3 is the fallback and nothing else in the stack depends
 on the choice.
+
+### Run the shipped tooling's own tests under `npm test`
+
+**Chosen:** `npm test` runs Vitest and then `node --test "tools/**/*.test.mjs"`.
+
+**Why:** the recipe wired `test` to `vitest run` alone, and Vitest's `include` is
+`test/**/*.test.ts`. `tools/spec-coverage.test.mjs` therefore ran nowhere — not locally, not in CI —
+despite the template shipping it specifically so that a project adjusting the `specCoverage` globs
+has the tests that catch it breaking them. Seven passing tests nobody executes are indistinguishable
+from no tests at all.
+
+`tools/` uses Node's built-in runner rather than Vitest, deliberately: it lets the template verify
+its own tooling without acquiring a dependency to do it. That is a good reason for two runners, and
+no reason at all for one of them to be unreachable.
+
+**Rejected:** widening Vitest's `include` to cover `tools/` — the tools are plain ESM with no
+transform, and pulling them into the bundler's test pipeline makes them depend on the thing they are
+meant to check independently. Also rejected: a separate CI step, which would leave the local
+`npm test` still lying about what it covers.
+
+**Accepted risk:** `npm test` is now two sequential runners, so a failure in the first hides results
+from the second. Acceptable at this size; the two report separately and both are fast.
 
 ### Pin `@types/node` to the Node major, not to its own latest
 
