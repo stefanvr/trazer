@@ -30,17 +30,20 @@ that does not change.
 
 **Checklist** — each item one commit's worth, and each committable without the next:
 
-- [ ] **The map, and what it opens.** Nodes, connections, stepping, the unlocked derivation, and
-      open-for-play. Pure functions over plain data, no DOM. `DS-1.7`, `DS-1.8`, `DS-1.9`.
-- [ ] **The run.** Lives, the two level outcomes, the run ending, and starting already on an open
-      level. Pure. `DS-1.1`, `DS-1.4`, `DS-1.6`, `DS-1.14`.
-- [ ] **Aborting.** Available from every state, ending the game without success. `DS-1.13`.
-- [ ] **The map screen.** Renders each node as cleared, open or locked; steps; enters. Adapter over
-      the pure core.
-- [ ] **The stub level and the endings.** Two buttons emitting the level's two outcomes, plus the
-      run-ended screen and starting a new game.
-- [ ] **The journey, end to end.** Playwright across §2, §3 and §4, with the existing build-identifier
-      and phone no-horizontal-scroll assertions still passing against the new interface.
+- [x] **The map, and what it opens** — the derivation opens nothing from an empty cleared set, so the
+      start level must be seeded → `domain-spec.md` **DS-1.9** and its derivation block.
+- [x] **The run** — no `Game` type was built, because in Arcade the run *is* the game and the seam
+      has nothing behind it until Journey → `tech-spec.md` **Architecture**.
+- [x] **Aborting** — *from any state* meant abort is never unavailable, not that it overwrites an
+      ending already reached → `domain-spec.md` **DS-1.13**.
+- [x] **The map screen, the stub level and the endings** — planned as two items and **merged into
+      one during the build**: the map is reachable only by clearing a level, so neither could land
+      alone without committing an application that renders nothing. The planning test needed a
+      reachability clause → `workflow.md` §4.
+- [x] **The journey, end to end** — test names must bracket their identifiers or the coverage tool
+      cannot see them, and it scans whole files so over-citing is as bad as under-citing →
+      `design-guide.md` §Tests. Also corrected this goal's own **Covers**: `DS-1.15` is
+      half-implemented, above.
 
 **Try it.** Open the deployed page. You begin already playing the start level. Press **clear level**
 and its neighbours open; step back onto it and nothing restarts, because it is cleared for this run
@@ -54,6 +57,12 @@ build identifier at the foot of the page still matches `main`.
 survives inside a level, and a level made of two buttons has nothing inside it to survive. Claiming
 them would make the coverage report lie in the direction of comfort. `DS-1.2` is absent because no
 mode is ever selected. All three belong to later goals.
+
+**Corrected during the build:** `DS-1.15` turned out to be half-implementable after all. Its second
+half — *play resumes from the level's current state* — is exactly what `lifeLost` does by leaving the
+phase untouched, so the rule is cited in `src/domain/run.ts` and reports as **implemented but not
+tested**. That is the honest state and it should stay visible: the untestable half needs a level with
+something inside it. `DS-1.16` remains genuinely absent.
 
 **What already exists and must be reused rather than repeated:**
 

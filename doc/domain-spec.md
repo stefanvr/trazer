@@ -152,10 +152,15 @@ mode (**DS-1.12**).
 - **[DS-1.8]** A level is **open for play** when it is unlocked and has not been cleared *in the
   current run*. The run scope is the point: a level cleared in an earlier Journey run is open again,
   and one cleared five minutes ago in this run is not. Walking back over it is passage, not a replay.
-- **[DS-1.9]** The unlocked set is every cleared level together with every level directly connected
-  to a cleared one. The rule is the same in both modes; only the set of cleared levels it reads
-  differs — the current run's in Arcade, the whole game's in Journey (**DS-1.3**). It is computed,
-  never recorded — see the derivation below.
+- **[DS-1.9]** The unlocked set is the start level, together with every cleared level and every
+  level directly connected to a cleared one. The rule is the same in both modes; only the set of
+  cleared levels it reads differs — the current run's in Arcade, the whole game's in Journey
+  (**DS-1.3**). It is computed, never recorded — see the derivation below.
+
+  **The start level is unlocked unconditionally**, not as a special case but because the derivation
+  yields nothing at all from an empty cleared set. Without it a run would begin with nowhere to go,
+  which **DS-1.6** forbids. Being unlocked is not being open for play, so this stays true and
+  harmless after the start level has itself been cleared (**DS-1.8**).
 - **[DS-1.10]** In Arcade the end level is reached by clearing one **designated route** within a
   single run. The map carries more than one such route, so the flawless path is a choice rather than
   a fixed sequence. [?H2]
@@ -164,7 +169,10 @@ mode (**DS-1.12**).
   rewards a clean run — the two modes are different games over one map, not difficulty settings.
 - **[DS-1.12]** A game ends in success only by clearing the end level. Every other ending — lives
   spent in Arcade, or an abort in either mode — ends it without success.
-- **[DS-1.13]** A game may be aborted at any time, from any state, including mid-level. [?H3]
+- **[DS-1.13]** A game may be aborted at any time, from any state, including mid-level. Aborting a
+  game that has already ended changes nothing: a run that ran out of lives and was then abandoned
+  ended because of the lives, and the ending has to keep saying which of the two happened. *From any
+  state* means abort is never unavailable, not that it overwrites an outcome already reached. [?H3]
 - **[DS-1.14]** A level ends in exactly two ways: it is cleared, or the run ends beneath it. Losing
   a life is **not** an exit — with lives remaining the level simply continues. The one exception is
   an abort, which ends the game and the level with it; that is the game ending, not the level
@@ -182,9 +190,9 @@ mode (**DS-1.12**).
 is passed in — the run's in Arcade, the game's in Journey — and nothing else about the computation
 changes (**DS-1.3**).
 *Output:* the set of levels the player may enter.
-*Rule:* every cleared level, plus every level directly connected to one.
-*Precedence:* none — the two contributions are unioned, and a level qualifying both ways is
-unlocked once.
+*Rule:* the start level, plus every cleared level, plus every level directly connected to one.
+*Precedence:* none — the three contributions are unioned, and a level qualifying more than one way
+is unlocked once.
 *No event.* Nothing happens when the set is recomputed; it is a function of facts already recorded,
 and asking twice must always give the same answer. **[DS-1.9]**
 

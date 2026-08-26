@@ -68,6 +68,15 @@ One rule holds already, because the skeleton depends on it:
   falls back to `unknown` rather than failing. An identifier that breaks the page it exists to
   describe is worse than no identifier at all.
 
+- **There is no `Game` type, and its absence is deliberate.** `DS-1.4` makes a game hold exactly one
+  run in Arcade, so while Arcade is the only mode a run ending *is* the game ending and the two are
+  the same object. Journey is where they come apart (`DS-1.5`), and that goal introduces the split.
+  Building the seam now would mean a `Game` wrapping a `Run` with nothing on the other side of it —
+  a layer that exists to be passed through, which is harder to remove later than to add.
+- **The mode is not a parameter of the domain functions.** `DS-1.9` is one derivation for both modes,
+  differing only in which cleared set is passed in. Threading a mode through the map and run
+  functions would put the distinction in the wrong place and have to be unpicked when Journey lands.
+
 **Known to be coming, and deliberately not decided here:** the rendering surface (canvas versus
 DOM), the fixed-versus-variable timestep, and where collision lives. All three need the domain
 first — see **Future direction**.
