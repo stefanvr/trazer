@@ -30,8 +30,8 @@ that does not change.
 
 **Checklist** — each item one commit's worth, and each committable without the next:
 
-- [ ] **The map, and what it opens.** Nodes, connections, stepping, the unlocked derivation, and
-      open-for-play. Pure functions over plain data, no DOM. `DS-1.7`, `DS-1.8`, `DS-1.9`.
+- [x] **The map, and what it opens** — the derivation opens nothing from an empty cleared set, so the
+      start level must be seeded → `domain-spec.md` **DS-1.9** and its derivation block.
 - [ ] **The run.** Lives, the two level outcomes, the run ending, and starting already on an open
       level. Pure. `DS-1.1`, `DS-1.4`, `DS-1.6`, `DS-1.14`.
 - [ ] **Aborting.** Available from every state, ending the game without success. `DS-1.13`.
