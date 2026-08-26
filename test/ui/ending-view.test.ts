@@ -8,7 +8,7 @@ import { abortGame, levelCleared, lifeLost, startRun } from "../../src/domain/ru
 const spent = () => lifeLost(lifeLost(lifeLost(startRun(TRAZER_MAP))));
 const abandoned = () => abortGame(startRun(TRAZER_MAP));
 
-describe("IS-4.3 — the ending names which ending it was", () => {
+describe("[IS-4.3] — the ending names which ending it was", () => {
   it("tells a run that ran out of lives from one that was abandoned", () => {
     expect(endingView(spent())).toContain('data-because="lives spent"');
     expect(endingView(abandoned())).toContain('data-because="abandoned"');
@@ -20,7 +20,7 @@ describe("IS-4.3 — the ending names which ending it was", () => {
   });
 });
 
-describe("IS-4.1 — the ending reports the run", () => {
+describe("[IS-4.1] — the ending reports the run", () => {
   it("reports nothing cleared when nothing was", () => {
     expect(endingView(spent())).toContain("<strong>0</strong>");
   });
@@ -31,7 +31,7 @@ describe("IS-4.1 — the ending reports the run", () => {
   });
 });
 
-describe("IS-4.2 — the way out is a new game", () => {
+describe("[IS-4.2], [DS-1.4] — the way out is a new game, because the run was the game", () => {
   it("offers a new game rather than a new run, because in Arcade the run was the game", () => {
     expect(endingView(spent())).toContain('data-testid="new-game"');
     expect(endingView(spent())).toContain("New game");

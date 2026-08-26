@@ -31,7 +31,7 @@ describe("the map as authored", () => {
   });
 });
 
-describe("DS-1.9 — the unlocked set is derived, never recorded", () => {
+describe("[DS-1.9] — the unlocked set is derived, never recorded", () => {
   it("opens the start level before anything has been cleared, so a new run has somewhere to go", () => {
     // Without seeding the start level the derivation yields nothing from an empty cleared set, and
     // DS-1.6 could not hold.
@@ -55,7 +55,7 @@ describe("DS-1.9 — the unlocked set is derived, never recorded", () => {
   });
 });
 
-describe("DS-1.8 — open for play is unlocked, and not cleared in this run", () => {
+describe("[DS-1.8] — open for play is unlocked, and not cleared in this run", () => {
   it("opens the start level at the beginning of a run", () => {
     expect(isOpenForPlay(TRAZER_MAP, cleared(), "C")).toBe(true);
   });
@@ -76,7 +76,7 @@ describe("DS-1.8 — open for play is unlocked, and not cleared in this run", ()
   });
 });
 
-describe("DS-1.7 — stepping moves one connection, in any direction", () => {
+describe("[DS-1.7] — stepping moves one connection, in any direction", () => {
   it("steps to a connected level whatever state it is in", () => {
     expect(stepTo(TRAZER_MAP, "C", "right")).toBe("E");
     expect(stepTo(TRAZER_MAP, "C", "up")).toBe("N");

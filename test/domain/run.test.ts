@@ -24,7 +24,7 @@ const goAndClear = (run: Run, direction: Direction): Run =>
 
 const step = (run: Run, direction: Direction): Run => chooseLevel(TRAZER_MAP, run, direction);
 
-describe("DS-1.6 — a run begins already playing an open level", () => {
+describe("[DS-1.6] — a run begins already playing an open level", () => {
   it("opens on the start level rather than on the map", () => {
     const run = startRun(TRAZER_MAP);
     expect(run.phase).toEqual({ kind: "playing", level: "C" });
@@ -37,7 +37,7 @@ describe("DS-1.6 — a run begins already playing an open level", () => {
   });
 });
 
-describe("DS-1.14 — a level ends exactly two ways", () => {
+describe("[DS-1.14] — a level ends exactly two ways", () => {
   it("returns the player to the map standing on the level they cleared", () => {
     const run = levelCleared(startRun(TRAZER_MAP));
     expect(run.phase).toEqual({ kind: "navigating", at: "C" });
@@ -57,7 +57,7 @@ describe("DS-1.14 — a level ends exactly two ways", () => {
   });
 });
 
-describe("DS-1.1 — three lives, and the run ends when the last is spent", () => {
+describe("[DS-1.1] — three lives, and the run ends when the last is spent", () => {
   it("keeps playing through the first two losses", () => {
     let run = startRun(TRAZER_MAP);
     run = lifeLost(run);
@@ -82,7 +82,7 @@ describe("DS-1.1 — three lives, and the run ends when the last is spent", () =
   });
 });
 
-describe("DS-1.7 — stepping across the map without playing", () => {
+describe("[DS-1.7] — stepping across the map without playing", () => {
   it("steps onto a connected level and starts nothing", () => {
     const run = step(levelCleared(startRun(TRAZER_MAP)), "right");
     expect(run.phase).toEqual({ kind: "navigating", at: "E" });
@@ -104,7 +104,7 @@ describe("DS-1.7 — stepping across the map without playing", () => {
   });
 });
 
-describe("DS-1.8 — a level opens when unlocked and not cleared this run", () => {
+describe("[DS-1.8] — a level opens when unlocked and not cleared this run", () => {
   it("starts an unlocked, uncleared level", () => {
     let run = levelCleared(startRun(TRAZER_MAP));
     run = startLevel(TRAZER_MAP, chooseLevel(TRAZER_MAP, run, "up"));
@@ -136,7 +136,7 @@ describe("DS-1.8 — a level opens when unlocked and not cleared this run", () =
   });
 });
 
-describe("DS-1.13 — a game may be aborted from any state", () => {
+describe("[DS-1.13] — a game may be aborted from any state", () => {
   it("aborts from inside a level", () => {
     const run = abortGame(startRun(TRAZER_MAP));
     expect(run.phase).toEqual({ kind: "ended", because: "abandoned" });
@@ -162,7 +162,7 @@ describe("DS-1.13 — a game may be aborted from any state", () => {
   });
 });
 
-describe("IS-3.7 — clearing everything with lives left strands the player", () => {
+describe("[IS-3.7] — clearing everything with lives left strands the player", () => {
   it("leaves no level open once all seven are cleared, with the run still alive", () => {
     let run = levelCleared(startRun(TRAZER_MAP)); // C, standing on it
     run = step(goAndClear(run, "up"), "down"); // N, back to C

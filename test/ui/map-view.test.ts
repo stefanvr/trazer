@@ -11,7 +11,7 @@ const onTheMap = (): Run => levelCleared(startRun(TRAZER_MAP));
 const step = (run: Run, d: Direction) => chooseLevel(TRAZER_MAP, run, d);
 const goAndClear = (run: Run, d: Direction) => levelCleared(startLevel(TRAZER_MAP, step(run, d)));
 
-describe("IS-3.3 — every level shows which of three states it is in", () => {
+describe("[IS-3.3] — every level shows which of three states it is in", () => {
   it("marks the cleared, the open and the locked apart", () => {
     const run = onTheMap();
     expect(stateOf(TRAZER_MAP, run, "C")).toBe("cleared");
@@ -30,7 +30,7 @@ describe("IS-3.3 — every level shows which of three states it is in", () => {
   });
 });
 
-describe("IS-3.1, IS-3.2 — a circle for here, arrow-heads for the moves", () => {
+describe("[IS-3.1], [IS-3.2] — a circle for here, arrow-heads for the moves", () => {
   it("marks exactly one level as the one being stood on", () => {
     const markup = mapView(TRAZER_MAP, onTheMap(), undefined);
     expect(markup.match(/data-here="true"/g)).toHaveLength(1);
@@ -55,7 +55,7 @@ describe("IS-3.1, IS-3.2 — a circle for here, arrow-heads for the moves", () =
   });
 });
 
-describe("IS-3.8 — the board scales rather than forcing the page wider", () => {
+describe("[IS-3.8] — the board scales rather than forcing the page wider", () => {
   it("carries a viewBox and no fixed pixel width", () => {
     const markup = mapView(TRAZER_MAP, onTheMap(), undefined);
     expect(markup).toMatch(/viewBox="0 0 \d+ \d+"/);
@@ -89,7 +89,7 @@ describe("the map is only the map", () => {
   });
 });
 
-describe("IS-3.7 — the stranded map", () => {
+describe("[IS-3.7] — the stranded map", () => {
   it("still draws every node when nothing is left open", () => {
     let run = onTheMap();
     run = step(goAndClear(run, "up"), "down");

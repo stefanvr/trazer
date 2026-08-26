@@ -40,8 +40,10 @@ that does not change.
       one during the build**: the map is reachable only by clearing a level, so neither could land
       alone without committing an application that renders nothing. The planning test needed a
       reachability clause → `workflow.md` §4.
-- [ ] **The journey, end to end.** Playwright across §2, §3 and §4, with the existing build-identifier
-      and phone no-horizontal-scroll assertions still passing against the new interface.
+- [x] **The journey, end to end** — test names must bracket their identifiers or the coverage tool
+      cannot see them, and it scans whole files so over-citing is as bad as under-citing →
+      `design-guide.md` §Tests. Also corrected this goal's own **Covers**: `DS-1.15` is
+      half-implemented, above.
 
 **Try it.** Open the deployed page. You begin already playing the start level. Press **clear level**
 and its neighbours open; step back onto it and nothing restarts, because it is cleared for this run
@@ -55,6 +57,12 @@ build identifier at the foot of the page still matches `main`.
 survives inside a level, and a level made of two buttons has nothing inside it to survive. Claiming
 them would make the coverage report lie in the direction of comfort. `DS-1.2` is absent because no
 mode is ever selected. All three belong to later goals.
+
+**Corrected during the build:** `DS-1.15` turned out to be half-implementable after all. Its second
+half — *play resumes from the level's current state* — is exactly what `lifeLost` does by leaving the
+phase untouched, so the rule is cited in `src/domain/run.ts` and reports as **implemented but not
+tested**. That is the honest state and it should stay visible: the untestable half needs a level with
+something inside it. `DS-1.16` remains genuinely absent.
 
 **What already exists and must be reused rather than repeated:**
 

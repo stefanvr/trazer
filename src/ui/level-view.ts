@@ -1,4 +1,4 @@
-// The level screen — [IS-2.2], [IS-2.4].
+// The level screen — [IS-2.1], [IS-2.2], [IS-2.4].
 //
 // Pure: state in, markup out. The two controls are [IS-2.4], the placeholder standing in for an
 // arena that has not been specified. They are the slice's real content rather than a development

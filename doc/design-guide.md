@@ -132,6 +132,18 @@ than *"reachableCells works"*. A failing test should describe the broken behavio
 before anyone opens the file. Where the behaviour is a specified rule, **lead with its identifier**
 so the coverage report can see it.
 
+**In square brackets — `[DS-1.9]`, not `DS-1.9`.** The same form as a module header, and for the
+same reason: `tools/spec-coverage.mjs` matches on the brackets. An unbracketed identifier in a test
+name reads perfectly to a person and is invisible to the tool, so the rule is reported untested
+while a test for it sits right there. Sixteen rules were reported that way on this project's first
+real coverage run, and the report is worth nothing if its default answer is wrong.
+
+**Bracket it only where the test really covers the rule.** The tool scans whole files rather than
+only test names, so a bracketed identifier in a passing remark inside a test body counts as coverage
+just as much as one in the name. Refer to a rule you are merely mentioning without the brackets.
+This cuts both ways and the second direction is the dangerous one: over-citing produces a green
+report that nobody can trust, which is worse than the red one it replaced.
+
 ## Anything random is seeded
 
 Route randomness through a seeded generator rather than the language's global one. A given seed must

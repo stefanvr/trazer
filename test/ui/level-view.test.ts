@@ -5,7 +5,7 @@ import { levelView } from "../../src/ui/level-view";
 import { TRAZER_MAP } from "../../src/domain/trazer-map";
 import { levelCleared, lifeLost, startRun } from "../../src/domain/run";
 
-describe("IS-2.2 — a level says which it is, and what the run has left", () => {
+describe("[IS-2.2] — a level says which it is, and what the run has left", () => {
   it("names the level, because the map is not visible from inside one", () => {
     expect(levelView(startRun(TRAZER_MAP))).toContain("Level C");
   });
@@ -16,7 +16,7 @@ describe("IS-2.2 — a level says which it is, and what the run has left", () =>
   });
 });
 
-describe("IS-2.4 — the two outcomes are offered as controls", () => {
+describe("[IS-2.4], [IS-2.1] — the two outcomes, and only those two, are offered as controls", () => {
   it("offers exactly the two ways a level can end, and no third", () => {
     const markup = levelView(startRun(TRAZER_MAP));
     expect(markup).toContain('data-testid="clear-level"');
@@ -29,7 +29,7 @@ describe("IS-2.4 — the two outcomes are offered as controls", () => {
     expect(markup).not.toContain("dev");
   });
 
-  it("offers abandoning from inside a level, per DS-1.13", () => {
+  it("offers abandoning from inside a level, per [DS-1.13]", () => {
     expect(levelView(startRun(TRAZER_MAP))).toContain('data-testid="abort"');
   });
 });

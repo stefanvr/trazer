@@ -72,8 +72,8 @@ export function levelCleared(run: Run): Run {
 }
 
 /**
- * [DS-1.14], [DS-1.1] — the other outcome. A life is spent; the level is **not** exited while lives
- * remain, because losing a life is not one of a level's two ways out.
+ * [DS-1.14], [DS-1.1], [IS-2.3] — the other outcome. A life is spent; the level is **not** exited
+ * while lives remain, because losing a life is not one of a level's two ways out.
  *
  * Spending the last life ends the run, and in Arcade that ends the game ([DS-1.4]). This is the
  * policy from domain-spec: no actor asks for it, arithmetic triggers it.
