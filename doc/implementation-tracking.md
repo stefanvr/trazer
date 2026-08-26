@@ -16,7 +16,90 @@ test is mechanical: delete the text, and see whether anything is now missing.
 
 ## Now
 
-*Empty. Nothing is in progress. `/plan-goal` takes the next goal from Backlog.*
+### Goal: a player can start a game, cross the map, and reach an ending — without a ball existing yet
+
+**Sign-off:** ☑ 2026-08-25. Specification input was given at the gate and is recorded below; the map
+and the navigation shapes came from it, and an opening screen with mode options was raised and
+withdrawn as feature creep.
+
+The walking skeleton. It makes the *run* real — lives, navigation, open-for-play, the run ending —
+while costing nothing in physics, because the level is stubbed to the only two outcomes `DS-1.14`
+allows it. Those outcomes are buttons, which is not a fake standing in for a level: it is the
+domain's own boundary made pressable, and the arena goal replaces the buttons behind an interface
+that does not change.
+
+**Checklist** — each item one commit's worth, and each committable without the next:
+
+- [ ] **The map, and what it opens.** Nodes, connections, stepping, the unlocked derivation, and
+      open-for-play. Pure functions over plain data, no DOM. `DS-1.7`, `DS-1.8`, `DS-1.9`.
+- [ ] **The run.** Lives, the two level outcomes, the run ending, and starting already on an open
+      level. Pure. `DS-1.1`, `DS-1.4`, `DS-1.6`, `DS-1.14`.
+- [ ] **Aborting.** Available from every state, ending the game without success. `DS-1.13`.
+- [ ] **The map screen.** Renders each node as cleared, open or locked; steps; enters. Adapter over
+      the pure core.
+- [ ] **The stub level and the endings.** Two buttons emitting the level's two outcomes, plus the
+      run-ended screen and starting a new game.
+- [ ] **The journey, end to end.** Playwright across §2, §3 and §4, with the existing build-identifier
+      and phone no-horizontal-scroll assertions still passing against the new interface.
+
+**Try it.** Open the deployed page. You begin already playing the start level. Press **clear level**
+and its neighbours open; step back onto it and nothing restarts, because it is cleared for this run
+(`DS-1.8`); step to a neighbour and enter it. Press **lose a life** three times and the run ends,
+offering a new game (`DS-1.4`). Abort mid-level and you reach the same ending by another route. The
+build identifier at the foot of the page still matches `main`.
+
+**Covers.** `DS-1.1`, `DS-1.4`, `DS-1.6`, `DS-1.7`, `DS-1.8`, `DS-1.9`, `DS-1.13`, `DS-1.14`.
+
+**Deliberately not covered, though they are area 1 rules.** `DS-1.15` and `DS-1.16` describe what
+survives inside a level, and a level made of two buttons has nothing inside it to survive. Claiming
+them would make the coverage report lie in the direction of comfort. `DS-1.2` is absent because no
+mode is ever selected. All three belong to later goals.
+
+**What already exists and must be reused rather than repeated:**
+
+- **`src/build-info.ts` and its end-to-end assertion.** Whatever replaces the placeholder page must
+  keep rendering the build identifier, because `e2e/smoke.spec.ts` asserts it is present and not
+  `unknown`. A deploy that cannot be checked against `main` is the one regression this must not
+  introduce.
+- **The phone no-horizontal-scroll assertion**, which now applies to a map of nodes — exactly the
+  kind of thing that overflows a narrow viewport.
+- **`design-guide.md`'s domain seam.** The run is a state machine over plain data and the DOM is an
+  adapter at the edge, which is what lets Vitest carry the coverage rather than Playwright, as
+  `tech-spec.md`'s testing strategy commits to.
+- **The `[DS-n.n]` citation format**, in module headers and leading test names, or
+  `npm run spec:coverage` reports this goal as having implemented nothing.
+
+**Specification input, given at the sign-off gate.** `/build-stage` writes §2, §3 and §4 of
+`implementation-spec.md` with this rather than rediscovering it.
+
+- **The map is seven levels, and it is the real map for now** — not a development fixture to be
+  thrown away. Five form a plus; the right-hand leaf carries one level above and one below.
+  Connections: `W–C`, `C–N`, `C–S`, `C–E`, `E–Eu`, `E–Ed`.
+
+  ```
+         N          Eu
+         |          |
+   W --- C --- E ---+
+         |          |
+         S          Ed
+  ```
+
+- **A run starts at `C`, the centre.** Clearing it opens all four arms at once; clearing `E` then
+  opens `Eu` and `Ed`. Widest choice immediately, depth three.
+- **In navigation, the current level is a circle or sphere, and the moves out of it are arrow-head
+  triangles** pointing the way they lead. The shapes are the behaviour and belong in §3; their
+  colours and sizes belong in `style-guide.md`, which stays empty until there is something worth
+  looking at.
+- **No opening screen and no mode options.** Raised and withdrawn as feature creep: Journey's
+  substance is persistence, which is a later goal, so a mode chooser here would offer a choice that
+  changes nothing. Arcade is hardcoded and `Select mode` is not implemented.
+- **Animation is deferred**, consistent with **Parked**.
+
+**A consequence of seven levels and no end level.** A player who clears all seven with lives to spare
+has nowhere left to go: `DS-1.8` closes each cleared level for the rest of the run, and the end level
+belongs to a later goal. The map will show everything cleared and nothing open, and **abort is the
+only way out** — a second reason adopting `DS-1.13` here was right. This is the honest shape of the
+slice rather than a defect, and the end-level goal removes it.
 
 ---
 
@@ -34,18 +117,6 @@ Planning, not before.
 Sliced from the backbone in [implementation-spec.md](implementation-spec.md). Each slice crosses
 every activity it can; none of them is a layer.
 
-- [ ] **A player can start a game, work their way across the map, and reach an ending — without a
-      ball existing yet.** The walking skeleton. The level is stubbed to the only two outcomes the
-      domain gives it (**DS-1.14**): two buttons, `Level cleared` and `Life lost`. Arcade only, no
-      mode choice, a handful of hardcoded nodes.
-      - **Why the stub is not a cheat:** `DS-1.14` says a level ends exactly two ways, so a button
-        per outcome is the domain's own boundary made pressable rather than a fake standing in for
-        one. Everything above the level — lives, navigation, open-for-play, the run ending — becomes
-        real and testable with no physics written.
-      - **What it proves that nothing else will:** `DS-1.7` free stepping, `DS-1.8` open-for-play
-        scoped to the run, `DS-1.1` lives as a run budget, and `DS-1.4` the run ending being the game
-        ending in Arcade. These are the rules most likely to be wrong, and they are cheapest to find
-        wrong here.
 - [ ] **A player can actually play a level.** The arena replaces the stub: a bat, a ball, bricks, one
       hazard edge. The two buttons become the two real events, and nothing above the level changes.
       - **Blocked on the arena being stormed.** `implementation-spec.md`'s *Play a level* journey
@@ -86,11 +157,15 @@ Real, decided against for now, with what would unpark it.
 Domain areas with no goal in any state. Maintained by `/sanity-check` once `domain-spec.md`
 carries identifiers — until then, deliberately empty rather than guessed at.
 
-`domain-spec.md` has one area, *The run*, and every rule in it is claimed by a goal above **except
-one**: `DS-1.13`, aborting a game. No journey passes through it and no slice contains it, which is
-how it went unnoticed until the citations were cross-checked. It is small, but it is reachable from
-every state in the game, and **[H3]** does not yet say whether aborting a Journey game keeps the
-progress earned. It needs a home before the Journey goal is planned.
+`domain-spec.md` has one area, *The run*, and every rule in it is now claimed by a goal. `DS-1.13`,
+aborting a game, briefly was not: no journey passed through it and no slice contained it, which is
+how it went unnoticed until the `DS-` citations were cross-checked between documents by hand. It was
+adopted into the goal in **Now** at the planning gate, where it is nearly free — that slice has every
+state abort is reachable from, and **[H3]** cannot bite while nothing is persisted.
+
+Worth keeping as a note on method: nothing in the toolchain found this. `npm run spec:coverage`
+compares rules against code and tests, not against journeys and goals, so a rule that no goal claims
+is invisible to it right up until the release it is missing from.
 
 **The gap runs the other way, and is worth naming here because nothing else reports it.** The
 backbone's largest activity, *Play a level*, has **no domain area at all** — the arena was never

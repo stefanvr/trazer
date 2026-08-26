@@ -126,6 +126,7 @@ mode (**DS-1.12**).
 | | Arcade | Journey |
 |---|---|---|
 | Unlocked at game creation | the start level only | every level cleared in any previous game, and their neighbours |
+| Unlocked thereafter | cleared levels and their neighbours, this run only | cleared levels and their neighbours, all games |
 | Clears persist between runs | no | yes |
 | A run ending | ends the game | ends the run only |
 | Reaching the end level | clear one designated route within a single run | clear every level on the map, accumulated across runs |
@@ -151,8 +152,10 @@ mode (**DS-1.12**).
 - **[DS-1.8]** A level is **open for play** when it is unlocked and has not been cleared *in the
   current run*. The run scope is the point: a level cleared in an earlier Journey run is open again,
   and one cleared five minutes ago in this run is not. Walking back over it is passage, not a replay.
-- **[DS-1.9]** In Journey, the unlocked set is every cleared level together with every level directly
-  connected to a cleared one. It is computed, never recorded — see the derivation below.
+- **[DS-1.9]** The unlocked set is every cleared level together with every level directly connected
+  to a cleared one. The rule is the same in both modes; only the set of cleared levels it reads
+  differs — the current run's in Arcade, the whole game's in Journey (**DS-1.3**). It is computed,
+  never recorded — see the derivation below.
 - **[DS-1.10]** In Arcade the end level is reached by clearing one **designated route** within a
   single run. The map carries more than one such route, so the flawless path is a choice rather than
   a fixed sequence. [?H2]
@@ -174,8 +177,10 @@ mode (**DS-1.12**).
   inside a level and nothing to resume — by **DS-1.14** the only way to leave one uncleared is for
   the run to end, and by **DS-1.1** a new run carries nothing forward.
 
-**DERIVATION — the unlocked set (Journey)**
-*Inputs:* the set of cleared levels, and the map's connections.
+**DERIVATION — the unlocked set**
+*Inputs:* the set of cleared levels, and the map's connections. The mode decides which cleared set
+is passed in — the run's in Arcade, the game's in Journey — and nothing else about the computation
+changes (**DS-1.3**).
 *Output:* the set of levels the player may enter.
 *Rule:* every cleared level, plus every level directly connected to one.
 *Precedence:* none — the two contributions are unioned, and a level qualifying both ways is
