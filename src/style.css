@@ -1,8 +1,16 @@
-/* Minimal skeleton styling. style-guide.md owns the visual decisions once there is something worth
-   looking at; this exists only so the skeleton is legible and does not scroll sideways on a phone. */
+/* Skeleton styling. style-guide.md owns the visual decisions and stays empty until there is
+   something worth looking at; what is here is the minimum that makes the screens legible and keeps
+   the page off a horizontal scrollbar. Animation is deferred, so nothing here transitions. */
 
 :root {
   color-scheme: light dark;
+  --ink: #0d0d14;
+  --panel: #1c1e2a;
+  --steel: #6e7480;
+  --parchment: #edeaf0;
+  --signal: #f2b705;
+  --accent: #2fd4c4;
+  --danger: #e23d28;
 }
 
 * {
@@ -11,22 +19,136 @@
 
 body {
   margin: 0;
+  background: var(--ink);
+  color: var(--parchment);
   font-family: system-ui, -apple-system, sans-serif;
   line-height: 1.5;
 }
 
-main {
+#app {
   max-width: 40rem;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem 2rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+
+/* The board scales to its container rather than to its own coordinates — [IS-3.8]. Seven nodes are
+   the widest thing this release draws, and a fixed width would push a phone sideways. */
+.board {
+  width: 100%;
+  max-width: 26rem;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.edge {
+  stroke: var(--steel);
+  stroke-width: 3;
+}
+
+.node {
+  stroke-width: 3;
+}
+
+.node.cleared {
+  fill: var(--panel);
+  stroke: var(--steel);
+}
+
+.node.open {
+  fill: var(--panel);
+  stroke: var(--accent);
+}
+
+.node.locked {
+  fill: #14151d;
+  stroke: #33353f;
+}
+
+/* [IS-3.1] — the level being stood on. Filled as well as larger, so it does not rely on size alone
+   to be found. */
+.node.here {
+  fill: var(--accent);
+  stroke: var(--parchment);
+}
+
+.label {
+  fill: var(--parchment);
+  font-size: 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* [IS-3.2] — the arrow-heads are the moves, so they are the brightest thing on the board. */
+.move {
+  fill: var(--signal);
+  cursor: pointer;
+}
+
+[data-action="enter"] {
+  cursor: pointer;
+}
+
+.notice {
+  border-left: 3px solid var(--signal);
+  padding-left: 0.75rem;
+  color: var(--parchment);
+}
+
+.lives strong {
+  color: var(--signal);
+}
+
+.placeholder {
+  color: var(--steel);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.4rem;
+  border: 2px solid var(--accent);
+  background: var(--accent);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+button.quiet {
+  background: transparent;
+  border-color: var(--steel);
+  color: var(--steel);
+}
+
+[data-testid="lose-a-life"] {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+[data-because="lives spent"] {
+  color: var(--danger);
 }
 
 /* The build identifier is the longest unbreakable-looking string on the page, and therefore the
    most likely thing to force a phone to scroll sideways. The end-to-end suite asserts that it does
    not — so this rule is load-bearing, not cosmetic. */
 .build {
+  margin-top: 2rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.875rem;
-  opacity: 0.7;
+  font-size: 0.8rem;
+  color: var(--steel);
   overflow-wrap: anywhere;
 }

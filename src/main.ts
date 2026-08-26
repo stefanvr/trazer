@@ -1,19 +1,13 @@
-// Application entry.
+// Application entry — [IS-1.1].
 //
-// Deliberately minimal: this exists to prove the pipeline end to end — build, test, deploy, and a
-// live page that can be checked against `main` — not to be the beginning of a user interface. The
-// first real screen arrives with a goal that has a journey behind it.
+// Finds the mount point and hands over to the shell. Everything else lives behind that call: the
+// rules in src/domain, the wiring in src/ui/app.ts. This file exists to fail loudly if the page it
+// is served into is not the page it expects.
 
-import { buildInfo, formatBuildInfo } from "./build-info";
+import { mountApp } from "./ui/app";
 import "./style.css";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 if (!app) throw new Error("#app is missing from index.html");
 
-app.innerHTML = `
-  <main>
-    <h1>Trazer</h1>
-    <p>The skeleton is deployed. Replace this with the first thing worth looking at.</p>
-    <p class="build" data-testid="build-info">${formatBuildInfo(buildInfo())}</p>
-  </main>
-`;
+mountApp(app);

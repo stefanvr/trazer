@@ -36,10 +36,10 @@ that does not change.
       has nothing behind it until Journey → `tech-spec.md` **Architecture**.
 - [x] **Aborting** — *from any state* meant abort is never unavailable, not that it overwrites an
       ending already reached → `domain-spec.md` **DS-1.13**.
-- [ ] **The map screen.** Renders each node as cleared, open or locked; steps; enters. Adapter over
-      the pure core.
-- [ ] **The stub level and the endings.** Two buttons emitting the level's two outcomes, plus the
-      run-ended screen and starting a new game.
+- [x] **The map screen, the stub level and the endings** — planned as two items and **merged into
+      one during the build**: the map is reachable only by clearing a level, so neither could land
+      alone without committing an application that renders nothing. The planning test needed a
+      reachability clause → `workflow.md` §4.
 - [ ] **The journey, end to end.** Playwright across §2, §3 and §4, with the existing build-identifier
       and phone no-horizontal-scroll assertions still passing against the new interface.
 

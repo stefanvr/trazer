@@ -121,6 +121,21 @@ A separate commit per item, not one per goal. Bundling makes the diff unreviewab
 useless. Commit messages say **why** — the what is in the diff. Decisions, rejected alternatives,
 and anything surprising are worth the lines.
 
+**Two items that cannot both be reached are one item.** The planning test — *can these be committed
+separately* — is about more than whether the code compiles apart. A screen only arrived at through
+another screen cannot land on its own in any state worth committing: the first commit leaves the
+application rendering nothing, and no reviewer can exercise it.
+
+Found building the walking skeleton, where *the map screen* and *the stub level* were planned as
+separate items. The map is reachable only by clearing a level, and clearing a level is what the
+other item builds. Either commit alone would have been a broken application, so they were merged
+during the build and the merge recorded on the checklist line.
+
+When it happens, merge the items and say so on the checklist rather than committing a half-working
+state to preserve a plan — the plan was wrong, and the tick should record what was actually done.
+**Ask it at planning time as a question about reachability**, not about files: *after this item and
+before the next, what can someone actually do?*
+
 ### 5. Verify before claiming done
 
 Run the **full** suite, not just what you touched. Report failures plainly, with output; a skipped
