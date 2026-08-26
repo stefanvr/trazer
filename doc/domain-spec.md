@@ -77,7 +77,7 @@ below depends on which of the two it is talking about.
 **FLOW**
 
 `Game created` → `Mode selected` → `Run started` → `Level started`
-`Level started` → `Level cleared` | `Run ended`
+`Level started` → `Life lost`\* → `Level cleared` | `Run ended`
 `Level cleared` → `Level chosen`\* → `Level started`
 `Run ended` → `Game ended` (Arcade) | `Run started` (Journey)
 `End level started` → `End level cleared` → `Game finished`
@@ -114,6 +114,10 @@ When the end-level condition for the mode becomes true (**DS-1.10**, **DS-1.11**
 started`.
 
 **POLICY**
+When `Life lost` **and** no lives remain → `Run ended`. Time and arithmetic trigger this; no actor
+asks for it (**DS-1.1**).
+
+**POLICY**
 When `End level cleared` → `Game finished`. This is the only way a game ends in success, in either
 mode (**DS-1.12**).
 
@@ -129,7 +133,8 @@ mode (**DS-1.12**).
 **RULES**
 
 - **[DS-1.1]** A run grants three lives. Lives belong to the run and are never persisted — not
-  between runs, not between games, in either mode. The run ends when the last one is spent. [?H1]
+  between runs, not between games, in either mode. The run ends when the last one is spent
+  (**DS-1.14**).
 - **[DS-1.2]** A game has exactly one mode, chosen once at creation and never changed. The two modes
   differ in what persists and in how the end level is reached, so a game that switched mode
   mid-flight would have no coherent answer to either.
@@ -157,6 +162,17 @@ mode (**DS-1.12**).
 - **[DS-1.12]** A game ends in success only by clearing the end level. Every other ending — lives
   spent in Arcade, or an abort in either mode — ends it without success.
 - **[DS-1.13]** A game may be aborted at any time, from any state, including mid-level. [?H3]
+- **[DS-1.14]** A level ends in exactly two ways: it is cleared, or the run ends beneath it. Losing
+  a life is **not** an exit — with lives remaining the level simply continues. The one exception is
+  an abort, which ends the game and the level with it; that is the game ending, not the level
+  reaching an outcome, which is why it is not counted as a third way out.
+- **[DS-1.15]** A level's progress survives a life loss. What the level has already lost stays lost,
+  and play resumes from the level's current state rather than its opening one. Exactly which pieces
+  return to their starting positions is the arena's rule; that the level's accumulated progress is
+  *not* discarded is this area's.
+- **[DS-1.16]** A level entered again always begins from its opening state. There are no checkpoints
+  inside a level and nothing to resume — by **DS-1.14** the only way to leave one uncleared is for
+  the run to end, and by **DS-1.1** a new run carries nothing forward.
 
 **DERIVATION — the unlocked set (Journey)**
 *Inputs:* the set of cleared levels, and the map's connections.
@@ -197,15 +213,6 @@ Each says what is currently true, what the alternative is, and what would settle
 here rather than in someone's head is what stops them being silently re-decided by whoever touches
 that code next.
 
-- **[H1]** **What a lost life does to the level being played.** `Run ended` is well defined — the
-  last life spent — but a life lost with lives remaining is not. Currently the specification says
-  only that the run continues. The alternatives are that the level restarts from its opening state,
-  or that the player is returned to navigation with the level left uncleared and therefore still open
-  for play (**DS-1.8**). The second reading follows from the timeline this area was built from, where
-  *level cleared or player died* both led to level options being presented — but that timeline used
-  *died* for the run ending, so it is not evidence for the intermediate case. Settled by deciding
-  what a life is for: a retry of the level, or a budget for the whole run.
-
 - **[H2]** **What makes a route in Arcade a designated one.** **DS-1.10** says the map carries more
   than one designated route to the end level, but not who designates them or what distinguishes a
   designated route from any other path through the map. The alternatives are that routes are authored
@@ -236,7 +243,7 @@ get re-opened by someone who was not there.
 
 | Was | Decided | When |
 |---|---|---|
-| — | | |
+| **[H1]** What a lost life does to the level being played | The level continues. Progress inside it is kept and only the ball is returned to its held position, so a life is a budget for the run rather than a retry of the level. Written as **DS-1.14**, **DS-1.15** and **DS-1.16**; a level has exactly two outcomes, and re-entry is always from the opening state | 2026-08-25 |
 
 ---
 
