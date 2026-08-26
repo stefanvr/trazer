@@ -32,8 +32,8 @@ that does not change.
 
 - [x] **The map, and what it opens** — the derivation opens nothing from an empty cleared set, so the
       start level must be seeded → `domain-spec.md` **DS-1.9** and its derivation block.
-- [ ] **The run.** Lives, the two level outcomes, the run ending, and starting already on an open
-      level. Pure. `DS-1.1`, `DS-1.4`, `DS-1.6`, `DS-1.14`.
+- [x] **The run** — no `Game` type was built, because in Arcade the run *is* the game and the seam
+      has nothing behind it until Journey → `tech-spec.md` **Architecture**.
 - [ ] **Aborting.** Available from every state, ending the game without success. `DS-1.13`.
 - [ ] **The map screen.** Renders each node as cleared, open or locked; steps; enters. Adapter over
       the pure core.
