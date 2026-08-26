@@ -34,7 +34,8 @@ that does not change.
       start level must be seeded → `domain-spec.md` **DS-1.9** and its derivation block.
 - [x] **The run** — no `Game` type was built, because in Arcade the run *is* the game and the seam
       has nothing behind it until Journey → `tech-spec.md` **Architecture**.
-- [ ] **Aborting.** Available from every state, ending the game without success. `DS-1.13`.
+- [x] **Aborting** — *from any state* meant abort is never unavailable, not that it overwrites an
+      ending already reached → `domain-spec.md` **DS-1.13**.
 - [ ] **The map screen.** Renders each node as cleared, open or locked; steps; enters. Adapter over
       the pure core.
 - [ ] **The stub level and the endings.** Two buttons emitting the level's two outcomes, plus the

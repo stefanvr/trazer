@@ -169,7 +169,10 @@ mode (**DS-1.12**).
   rewards a clean run — the two modes are different games over one map, not difficulty settings.
 - **[DS-1.12]** A game ends in success only by clearing the end level. Every other ending — lives
   spent in Arcade, or an abort in either mode — ends it without success.
-- **[DS-1.13]** A game may be aborted at any time, from any state, including mid-level. [?H3]
+- **[DS-1.13]** A game may be aborted at any time, from any state, including mid-level. Aborting a
+  game that has already ended changes nothing: a run that ran out of lives and was then abandoned
+  ended because of the lives, and the ending has to keep saying which of the two happened. *From any
+  state* means abort is never unavailable, not that it overwrites an outcome already reached. [?H3]
 - **[DS-1.14]** A level ends in exactly two ways: it is cleared, or the run ends beneath it. Losing
   a life is **not** an exit — with lives remaining the level simply continues. The one exception is
   an abort, which ends the game and the level with it; that is the game ending, not the level

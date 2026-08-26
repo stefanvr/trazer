@@ -3,6 +3,7 @@
 import { describe, it, expect } from "vitest";
 import {
   STARTING_LIVES,
+  abortGame,
   chooseLevel,
   isOver,
   levelCleared,
@@ -132,6 +133,32 @@ describe("DS-1.8 — a level opens when unlocked and not cleared this run", () =
     for (const level of ["C", "E"]) {
       expect(whyClosed(TRAZER_MAP, run, level)).toBe("cleared");
     }
+  });
+});
+
+describe("DS-1.13 — a game may be aborted from any state", () => {
+  it("aborts from inside a level", () => {
+    const run = abortGame(startRun(TRAZER_MAP));
+    expect(run.phase).toEqual({ kind: "ended", because: "abandoned" });
+  });
+
+  it("aborts from the map", () => {
+    const run = abortGame(levelCleared(startRun(TRAZER_MAP)));
+    expect(run.phase).toEqual({ kind: "ended", because: "abandoned" });
+  });
+
+  it("keeps lives and clears intact, so the ending can still report them", () => {
+    let run = levelCleared(startRun(TRAZER_MAP));
+    run = abortGame(lifeLost(startLevel(TRAZER_MAP, chooseLevel(TRAZER_MAP, run, "up"))));
+    expect(levelsCleared(run)).toBe(1);
+    expect(run.livesRemaining).toBe(2);
+  });
+
+  it("does not overwrite why a run already ended", () => {
+    // IS-4.3 has to tell a player who quit from one who lost; abandoning a finished run must not
+    // rewrite the first as the second.
+    const spent = lifeLost(lifeLost(lifeLost(startRun(TRAZER_MAP))));
+    expect(abortGame(spent).phase).toEqual({ kind: "ended", because: "lives spent" });
   });
 });
 

@@ -138,6 +138,22 @@ export function openLevels(map: LevelMap, run: Run): readonly LevelId[] {
     .filter((id) => isOpenForPlay(map, run.cleared, id));
 }
 
+/**
+ * [DS-1.13] — a game may be aborted at any time, from any state, including mid-level.
+ *
+ * Unlike every other transition here there is no phase it is invalid from, which is the whole point
+ * of the rule: abort is the one action always available, and in this release it is also the only way
+ * off a map with nothing left open ([IS-3.7]).
+ *
+ * Aborting an already-ended game changes nothing rather than overwriting why it ended. A run that
+ * ran out of lives and was then abandoned ended because of the lives, and [IS-4.3] has to keep
+ * telling the player which of the two happened.
+ */
+export function abortGame(run: Run): Run {
+  if (run.phase.kind === "ended") return run;
+  return { ...run, phase: { kind: "ended", because: "abandoned" } };
+}
+
 export function isOver(run: Run): boolean {
   return run.phase.kind === "ended";
 }
